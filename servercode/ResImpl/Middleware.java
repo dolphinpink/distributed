@@ -1,7 +1,4 @@
-// -------------------------------
-// adapted from Kevin T. Manley
-// CSE 593
-//
+
 package ResImpl;
 
 import ResInterface.*;
@@ -14,7 +11,7 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.rmi.RMISecurityManager;
 
-public class ResourceManagerImpl implements ResourceManager 
+public class Middleware implements ResourceManager 
 {
     
     protected RMHashtable m_itemHT = new RMHashtable();
