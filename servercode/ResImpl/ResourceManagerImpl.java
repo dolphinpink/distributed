@@ -57,7 +57,7 @@ public class ResourceManagerImpl implements ResourceManager
     }
      
     public ResourceManagerImpl() throws RemoteException {
-
+    	System.err.println("AHHHHH")
     }
 
     // Reads a data item
