@@ -42,7 +42,7 @@ public class ResourceManagerImpl implements ResourceManager
 
             // Bind the remote object's stub in the registry
             Registry registry = LocateRegistry.getRegistry(port);
-            registry.rebind("MyGroupResourceManager", rm);
+            registry.rebind("Group40", rm);
 
             System.err.println("Server ready");
         } catch (Exception e) {
@@ -57,8 +57,8 @@ public class ResourceManagerImpl implements ResourceManager
     }
      
     public ResourceManagerImpl() throws RemoteException {
+
     }
-     
 
     // Reads a data item
     private RMItem readData( int id, String key )
