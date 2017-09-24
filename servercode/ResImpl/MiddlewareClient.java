@@ -75,6 +75,7 @@ public class MiddlewareClient {
 
 
     public boolean deleteFlight(int id, int flightNumber) throws RemoteException {
+    	System.out.println("CLIENT TEST IS WORKING"); //TODO FIX
         if (rm.deleteFlight(id, flightNumber))
             System.out.println("Flight Deleted");
         else
