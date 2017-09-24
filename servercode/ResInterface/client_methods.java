@@ -1,43 +1,29 @@
+package ResInterface;
 
-package ResImpl;
 
-import ResInterface.*;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
-import java.rmi.RMISecurityManager;
+import java.rmi.Remote;
+import java.rmi.RemoteException {
+
+}
 
 import java.util.*;
-import java.io.*;
+/**
+ * Simplified version from CSE 593 Univ. of Washington
+ *
+ * Distributed  System in Java.
+ *
+ * failure reporting is done using two pieces, exceptions and boolean
+ * return values.  Exceptions are used for systemy things. Return
+ * values are used for operations that would affect the consistency
+ *
+ * If there is a boolean return value and you're not sure how it
+ * would be used in your implementation, ignore it.  I used boolean
+ * return values in the interface generously to allow flexibility in
+ * implementation.  But don't forget to return true when the operation
+ * has succeeded.
+ */
 
-
-public class MiddlewareClient {
-    ResourceManager rm;
-    client obj;
-
-    public MiddlewareClient(int portNum, String server) {
-        obj = new client();
-
-        try {
-            // get a reference to the rmiregistry
-            Registry registry = LocateRegistry.getRegistry(server, port);
-            // get the proxy and the remote reference by rmiregistry lookup
-            rm = (ResourceManager) registry.lookup("Group40");
-            if (rm != null) {
-                System.out.println("Successful");
-                System.out.println("Connected to RM");
-            } else {
-                System.out.println("Unsuccessful");
-            }
-            // make call on remote method
-        } catch (Exception e) {
-            System.err.println("Client exception: " + e.toString());
-            e.printStackTrace();
-        }
-
-        if (System.getSecurityManager() == null) {
-            //System.setSecurityManager(new RMISecurityManager());
-        }
-    }
+public interface ResourceManager extends Remote {
 
     public boolean addFlight(int id, int flightNum, int flightSeats, int flightPrice) throws RemoteException {
         if (rm.addFlight(id, flightNum, flightSeats, flightPrice))
@@ -127,6 +113,7 @@ public class MiddlewareClient {
     public String queryCustomerInfo(int id, int customer) throws RemoteException {
         String bill = rm.queryCustomerInfo(id, customer);
         System.out.println("Customer info:" + bill);
+
     }
 
 
@@ -164,7 +151,7 @@ public class MiddlewareClient {
     }
 
 
-    public boolean reserveRoom(int id, int customer, String location) throws RemoteException {
+    public boolean reserveRoom(int id, int customer, String locationd) throws RemoteException {
         if (rm.reserveRoom(id, customer, location))
             System.out.println("Room Reserved");
         else
@@ -178,4 +165,5 @@ public class MiddlewareClient {
         else
             System.out.println("Itinerary could not be reserved.");
     }
+
 }
