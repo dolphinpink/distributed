@@ -42,7 +42,7 @@ public class ResourceManagerImpl implements ResourceManager
 
             // Bind the remote object's stub in the registry
             Registry registry = LocateRegistry.getRegistry(port);
-            registry.rebind"Group40", r(m);
+            registry.rebind("Group40", r(m));
 
             System.err.println("Server ready");
         } catch (Exception e) {
@@ -192,7 +192,7 @@ public class ResourceManagerImpl implements ResourceManager
         throws RemoteException
     {
     	//TODO fix this
-    	Trace.info("this is working!")
+    	Trace.info("this is working!");
     	return false;
         //return deleteItem(id, Flight.getKey(flightNum));
     }
