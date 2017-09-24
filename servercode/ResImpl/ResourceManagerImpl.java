@@ -191,7 +191,10 @@ public class ResourceManagerImpl implements ResourceManager
     public boolean deleteFlight(int id, int flightNum)
         throws RemoteException
     {
-        return deleteItem(id, Flight.getKey(flightNum));
+    	//TODO fix this
+    	Trace.info("this is working!")
+    	return false;
+        //return deleteItem(id, Flight.getKey(flightNum));
     }
 
 
