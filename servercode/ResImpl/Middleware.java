@@ -188,9 +188,7 @@ public class Middleware implements ResourceManager
     public boolean deleteFlight(int id, int flightNum)
         throws RemoteException
     {
-    	Trace.info("test worked!")
-    	return true;
-        //return deleteItem(id, Flight.getKey(flightNum));
+    	MiddlewareClient.invokeMethod(6, new Vector<Object>())
     }
 
 
