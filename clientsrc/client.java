@@ -2,6 +2,7 @@ import ResInterface.*;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.RMISecurityManager;
+import java.rmi.RemoteException;
 
 import java.util.*;
 import java.io.*;
@@ -16,12 +17,13 @@ public class client {
         BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
         String command = "";
         Vector arguments  = new Vector();
-        int id, cid;
-        int flightNum;
+        int id;
+        int cid;
+        int flightNumber;
         int flightPrice;
         int flightSeats;
-        boolean Room;
-        boolean Car;
+        boolean room;
+        boolean car;
         int price;
         int numRooms;
         int numCars;
@@ -111,10 +113,10 @@ public class client {
                 try {
 
                     id = obj.getInt(arguments.elementAt(1));
-                    flightNum = obj.getInt(arguments.elementAt(2));
+                    flightNumber = obj.getInt(arguments.elementAt(2));
                     flightSeats = obj.getInt(arguments.elementAt(3));
                     flightPrice = obj.getInt(arguments.elementAt(4));
-                    addFlight(id, flightNum, flightSeats, flightPrice);
+                    addFlight(id, flightNumber, flightSeats, flightPrice);
 
                 } catch (Exception e) {
 
@@ -222,8 +224,8 @@ public class client {
                 try {
 
                     id = obj.getInt(arguments.elementAt(1));
-                    flightNum = obj.getInt(arguments.elementAt(2));
-                    deleteFlight(id, flightnum);
+                    flightNumber = obj.getInt(arguments.elementAt(2));
+                    deleteFlight(id, flightNumber);
 
                 } catch (Exception e) {
 
@@ -300,8 +302,8 @@ public class client {
                 try {
 
                     id = obj.getInt(arguments.elementAt(1));
-                    int customer = obj.getInt(arguments.elementAt(2));
-                    deleteCustomer(id, customer);
+                    cid = obj.getInt(arguments.elementAt(2));
+                    deleteCustomer(id, cid);
 
                 } catch (Exception e) {
 
@@ -403,8 +405,8 @@ public class client {
                 try {
 
                     id = obj.getInt(arguments.elementAt(1));
-                    int customer = obj.getInt(arguments.elementAt(2));
-                    queryCustomerInfo(id, customer);
+                    cid = obj.getInt(arguments.elementAt(2));
+                    queryCustomerInfo(id, cid);
 
                 } catch (Exception e) {
 
@@ -430,7 +432,7 @@ public class client {
 
                     id = obj.getInt(arguments.elementAt(1));
                     flightNumber = obj.getInt(arguments.elementAt(2));
-                    queryFlightPrice(id, flightNumber)
+                    queryFlightPrice(id, flightNumber);
 
                 } catch (Exception e) {
 
@@ -456,7 +458,7 @@ public class client {
 
                     id = obj.getInt(arguments.elementAt(1));
                     location = obj.getString(arguments.elementAt(2));
-                    queryCarsPrice(id, location)
+                    queryCarsPrice(id, location);
 
                 } catch (Exception e) {
 
@@ -508,9 +510,9 @@ public class client {
                 try {
 
                     id = obj.getInt(arguments.elementAt(1));
-                    int customer = obj.getInt(arguments.elementAt(2));
+                    cid = obj.getInt(arguments.elementAt(2));
                     flightNumber = obj.getInt(arguments.elementAt(3));
-                    reserveFlight(id, customer, flightNumber);
+                    reserveFlight(id, cid, flightNumber);
 
                 } catch (Exception e) {
 
@@ -536,9 +538,9 @@ public class client {
                 try {
 
                     id = obj.getInt(arguments.elementAt(1));
-                    int customer = obj.getInt(arguments.elementAt(2));
+                    cid = obj.getInt(arguments.elementAt(2));
                     location = obj.getString(arguments.elementAt(3));
-                    reserveCar(id, customer, location);
+                    reserveCar(id, cid, location);
 
                 } catch (Exception e) {
 
@@ -563,9 +565,9 @@ public class client {
                 try {
 
                     id = obj.getInt(arguments.elementAt(1));
-                    int customer = obj.getInt(arguments.elementAt(2));
+                    cid = obj.getInt(arguments.elementAt(2));
                     location = obj.getString(arguments.elementAt(3));
-                    reserveRoom(id, customer, location);
+                    reserveRoom(id, cid, location);
 
                 } catch (Exception e) {
 
@@ -597,7 +599,7 @@ public class client {
                 try {
 
                     id = obj.getInt(arguments.elementAt(1));
-                    int customer = obj.getInt(arguments.elementAt(2));
+                    cid = obj.getInt(arguments.elementAt(2));
                     Vector flightNumbers = new Vector();
                     for (int i = 0; i < arguments.size() - 6; i++)
                         flightNumbers.addElement(arguments.elementAt(3 + i));
@@ -605,7 +607,7 @@ public class client {
                     car = obj.getBoolean(arguments.elementAt(arguments.size() - 2));
                     room = obj.getBoolean(arguments.elementAt(arguments.size() - 1));
 
-                    itinerary(id, customer, flightNumbers, location, car, room);
+                    itinerary(id, cid, flightNumbers, location, car, room);
 
                 } catch (Exception e) {
 
@@ -949,15 +951,15 @@ public class client {
 
     // METHODS
 
-    public boolean addFlight(int id, int flightNum, int flightSeats, int flightPrice) throws RemoteException {
-        if (rm.addFlight(id, flightNum, flightSeats, flightPrice))
+    public static void addFlight(int id, int flightNumber, int flightSeats, int flightPrice) throws RemoteException {
+        if (rm.addFlight(id, flightNumber, flightSeats, flightPrice))
             System.out.println("Flight added");
         else
             System.out.println("Flight could not be added");
     }
 
 
-    public boolean addCars(int id, String location, int numCars, int price) throws RemoteException {
+    public static void addCars(int id, String location, int numCars, int price) throws RemoteException {
         if (rm.addCars(id, location, numCars, price))
             System.out.println("Cars added");
         else
@@ -965,7 +967,7 @@ public class client {
     }
 
 
-    public boolean addRooms(int id, String location, int numRooms, int price) throws RemoteException {
+    public static void addRooms(int id, String location, int numRooms, int price) throws RemoteException {
         if (rm.addRooms(id, location, numRooms, price))
             System.out.println("Rooms added");
         else
@@ -973,18 +975,22 @@ public class client {
     }
 
 
-    public int newCustomer(int id) throws RemoteException {
-        int customer = rm.newCustomer(id);
-        System.out.println("new customer id:" + customer);
-    }
-
-    public boolean newCustomer(int id, int cid) throws RemoteException {
-        boolean customer = rm.newCustomer(id, cid);
+    public static void newCustomer(int id) throws RemoteException {
+        int cid = rm.newCustomer(id);
         System.out.println("new customer id:" + cid);
     }
 
+    public static void newCustomer(int id, int cid) throws RemoteException {
+        boolean customerCreated = rm.newCustomer(id, cid);
 
-    public boolean deleteFlight(int id, int flightNumber) throws RemoteException {
+        if (customerCreated)
+        	System.out.println("new customer id:" + cid);
+        else
+        	System.out.println("customer creation failed");
+    }
+
+
+    public static void deleteFlight(int id, int flightNumber) throws RemoteException {
         if (rm.deleteFlight(id, flightNumber))
             System.out.println("Flight Deleted");
         else
@@ -992,7 +998,7 @@ public class client {
     }
 
 
-    public boolean deleteCars(int id, String location) throws RemoteException {
+    public static void deleteCars(int id, String location) throws RemoteException {
         if (rm.deleteCars(id, location))
             System.out.println("Cars Deleted");
         else
@@ -1000,7 +1006,7 @@ public class client {
     }
 
 
-    public boolean deleteRooms(int id, String location) throws RemoteException {
+    public static void deleteRooms(int id, String location) throws RemoteException {
         if (rm.deleteRooms(id, location))
             System.out.println("Rooms Deleted");
         else
@@ -1008,83 +1014,83 @@ public class client {
     }
 
 
-    public boolean deleteCustomer(int id, int customer) throws RemoteException {
-        if (rm.deleteCustomer(id, customer))
+    public static void deleteCustomer(int id, int cid) throws RemoteException {
+        if (rm.deleteCustomer(id, cid))
             System.out.println("Customer Deleted");
         else
             System.out.println("Customer could not be deleted");
     }
 
 
-    public int queryFlight(int id, int flightNumber) throws RemoteException {
+    public static void queryFlight(int id, int flightNumber) throws RemoteException {
         int seats = rm.queryFlight(id, flightNumber);
         System.out.println("Number of seats available:" + seats);
     }
 
 
-    public int queryCars(int id, String location) throws RemoteException {
-        numCars = rm.queryCars(id, location);
+    public static void queryCars(int id, String location) throws RemoteException {
+        int numCars = rm.queryCars(id, location);
         System.out.println("number of Cars at this location:" + numCars);
     }
 
 
-    public int queryRooms(int id, String location) throws RemoteException {
-        numRooms = rm.queryRooms(id, location);
+    public static void queryRooms(int id, String location) throws RemoteException {
+        int numRooms = rm.queryRooms(id, location);
         System.out.println("number of Rooms at this location:" + numRooms);
     }
 
 
-    public String queryCustomerInfo(int id, int customer) throws RemoteException {
-        String bill = rm.queryCustomerInfo(id, customer);
+    public static void queryCustomerInfo(int id, int cid) throws RemoteException {
+        String bill = rm.queryCustomerInfo(id, cid);
         System.out.println("Customer info:" + bill);
 
     }
 
 
-    public int queryFlightPrice(int id, int flightNumber) throws RemoteException {
-        price = rm.queryFlightPrice(id, flightNumber);
+    public static void queryFlightPrice(int id, int flightNumber) throws RemoteException {
+        int price = rm.queryFlightPrice(id, flightNumber);
         System.out.println("Price of a seat:" + price);
     }
 
 
-    public int queryCarsPrice(int id, String location) throws RemoteException {
-        price = rm.queryCarsPrice(id, location);
+    public static void queryCarsPrice(int id, String location) throws RemoteException {
+        int price = rm.queryCarsPrice(id, location);
         System.out.println("Price of a car at this location:" + price);
     }
 
 
-    public int queryRoomsPrice(int id, String location) throws RemoteException {
-        price = rm.queryRoomsPrice(id, location);
+    public static void queryRoomsPrice(int id, String location) throws RemoteException {
+        int price = rm.queryRoomsPrice(id, location);
         System.out.println("Price of Rooms at this location:" + price);
     }
 
 
-    public boolean reserveFlight(int id, int customer, int flightNumber) throws RemoteException {
-        if (rm.reserveFlight(id, customer, flightNumber))
+    public static void reserveFlight(int id, int cid, int flightNumber) throws RemoteException {
+        if (rm.reserveFlight(id, cid, flightNumber))
             System.out.println("Flight Reserved");
         else
             System.out.println("Flight could not be reserved.");
     }
 
 
-    public boolean reserveCar(int id, int customer, String location) throws RemoteException {
-        if (rm.reserveCar(id, customer, location))
+    public static void reserveCar(int id, int cid, String location) throws RemoteException {
+        if (rm.reserveCar(id, cid, location))
             System.out.println("Car Reserved");
         else
             System.out.println("Car could not be reserved.");
     }
 
 
-    public boolean reserveRoom(int id, int customer, String locationd) throws RemoteException {
-        if (rm.reserveRoom(id, customer, location))
+    public static void reserveRoom(int id, int cid, String location) throws RemoteException {
+        if (rm.reserveRoom(id, cid, location))
             System.out.println("Room Reserved");
         else
             System.out.println("Room could not be reserved.");
     }
 
 
-    public boolean itinerary(int id, int customer, Vector flightNumbers, String location, boolean car, boolean room) throws RemoteException {
-        if (rm.itinerary(id, customer, flightNumbers, location, car, room))
+    public static void itinerary(int id, int cid, Vector flightNumbers, String location, boolean car, boolean room) throws RemoteException {
+        if (rm.itinerary(id, cid, flightNumbers, location, car, room))
             System.out.println("Itinerary Reserved");
         else
             System.out.println("Itinerary could not be reserved.");
