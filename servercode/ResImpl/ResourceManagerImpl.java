@@ -19,24 +19,30 @@ public class ResourceManagerImpl implements ResourceManager {
 	private static final int CUSTOMER_PORT = 1043;
 	protected RMHashtable m_itemHT = new RMHashtable();
 
-	Client customerClient;
+	private static Client customerClient;
 
 	public static void main(String args[]) {
-
-		customerClient = new Client(CUSTOMER_PORT, server);
 
 		// Figure out where server is running
 		String server = "localhost";
 		int port = 1099;
 
-		if (args.length == 1) {
-			server = server + ":" + args[0];
-			port = Integer.parseInt(args[0]);
-		} else if (args.length != 0 &&  args.length != 1) {
-			System.err.println ("Wrong usage");
-			System.out.println ("Usage: java ResImpl.ResourceManagerImpl [port]");
-			System.exit(1);
-		}
+		System.out.println("it's working");
+        if (args.length > 0) {
+            server = args[0];
+        }
+        if (args.length > 1) {
+            port = Integer.parseInt(args[1]);
+        }
+        if (args.length > 2) {
+            System.out.println ("Usage: java client [rmihost [rmiport]]");
+            System.exit(1);
+        }
+		
+		if (port != CUSTOMER_PORT)
+			customerClient = new Client(CUSTOMER_PORT, server);
+
+		System.out.println("it's working");
 
 		try {
 			// create a new Server object
@@ -136,7 +142,15 @@ public class ResourceManagerImpl implements ResourceManager {
 	protected boolean reserveItem(int id, int customerId, String key, String location) {
 		Trace.info("RM::reserveItem( " + id + ", customer=" + customerId + ", " + key + ", " + location + " ) called" );
 
-		if (!rm.customerExists(id, customerId)) {
+		Customer customer = null;
+
+		try {
+			customer = customerClient.getCustomer(id, customerId);
+		} catch (RemoteException re) {
+			System.out.println("problem fetching remote customer object");
+		}
+		
+		if (customer == null) {
 			Trace.warn("RM::reserveCar( " + id + ", " + customerId + ", " + key + ", " + location + ")  failed--customer doesn't exist" );
 			return false;
 		}
@@ -155,8 +169,8 @@ public class ResourceManagerImpl implements ResourceManager {
 
 		} else {
 
-			cust.reserve( key, location, item.getPrice());
-			writeData( id, cust.getKey(), cust );
+			customer.reserve( key, location, item.getPrice());
+			writeData( id, customer.getKey(), customer);
 
 			// decrease the number of available items in the storage
 			item.setCount(item.getCount() - 1);
@@ -413,14 +427,8 @@ public class ResourceManagerImpl implements ResourceManager {
 		} // if
 	}
 
-	public boolean customerExists(int id, int customerId) throws remoteException {
-
-		Customer cust = (Customer) readData( id, Customer.getKey(customerId));
-
-		if (cust == null)
-			return false;
-		else
-			return true;
+	public Customer getCustomer(int id, int customerId) throws RemoteException {
+		return (Customer) readData( id, Customer.getKey(customerId));
 	}
 
 	/*

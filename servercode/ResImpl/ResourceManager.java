@@ -1,4 +1,4 @@
-package ResInterface;
+package ResImpl;
 
 
 import java.rmi.Remote;
@@ -85,7 +85,10 @@ public interface ResourceManager extends Remote
     
     /* deleteCustomer removes the customer and associated reservations */
     public boolean deleteCustomer(int id,int customer) 
-	throws RemoteException; 
+	throws RemoteException;
+    
+    /* non garbage way of getting customer */
+    public Customer getCustomer(int id, int customerId) throws RemoteException;
 
     /* queryFlight returns the number of empty seats. */
     public int queryFlight(int id, int flightNumber) 

@@ -1,4 +1,4 @@
-import ResInterface.*;
+import ResImpl.*;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.RMISecurityManager;
@@ -43,7 +43,7 @@ public class ClientRunner {
             System.exit(1);
         }
 
-        Client client = new Client(1099, "localhost");
+        Client client = new Client(port, server);
 
         if (System.getSecurityManager() == null) {
             //System.setSecurityManager(new RMISecurityManager());
@@ -589,7 +589,7 @@ public class ClientRunner {
                     car = obj.getBoolean(arguments.elementAt(arguments.size() - 2));
                     room = obj.getBoolean(arguments.elementAt(arguments.size() - 1));
 
-                    itinerary(id, cid, flightNumbers, location, car, room);
+                    client.itinerary(id, cid, flightNumbers, location, car, room);
 
                 } catch (Exception e) {
 

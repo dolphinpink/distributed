@@ -17,18 +17,20 @@ public class Middleware implements ResourceManager {
 	private static final int ROOM_PORT = 1041;
 	private static final int CAR_PORT = 1042;
 	private static final int CUSTOMER_PORT = 1043;
+	private static final int MIDDLEWARE_PORT = 1099;
 
 	private Object reservationLock = new Object();
 
 	protected RMHashtable m_itemHT = new RMHashtable();
-	Client roomClient;
-	Client flightClient;
-	Client carClient;
-	Client customerClient;
+	private static Client roomClient;
+	private static Client flightClient;
+	private static Client carClient;
+	private static Client customerClient;
 
 	public static void main(String args[]) {
 		// Figure out where server is running
 		String server = "localhost";
+		int port = 1099;
 
 		flightClient = new Client(FLIGHT_PORT, server);
 		roomClient = new Client(ROOM_PORT, server);
@@ -37,13 +39,13 @@ public class Middleware implements ResourceManager {
 
 		try {
 			// create a new Server object
-			ResourceManagerImpl obj = new ResourceManagerImpl();
+			Middleware obj = new Middleware();
 			// dynamically generate the stub (client proxy)
 			ResourceManager rm = (ResourceManager) UnicastRemoteObject.exportObject(obj, 0);
 
 			// Bind the remote object's stub in the registry
-			Registry registry = LocateRegistry.getRegistry(port);
-			registry.rebind"Group40", r(m);
+			Registry registry = LocateRegistry.getRegistry(MIDDLEWARE_PORT);
+			registry.rebind("Group40", rm);
 
 			System.err.println("Server ready");
 		} catch (Exception e) {
@@ -57,7 +59,7 @@ public class Middleware implements ResourceManager {
 		}
 	}
 
-	public ResourceManagerImpl() throws RemoteException {}
+	public Middleware() throws RemoteException {}
 
 
 	public boolean addFlight(int id, int flightNum, int flightSeats, int flightPrice) throws RemoteException {
@@ -76,8 +78,7 @@ public class Middleware implements ResourceManager {
 
 
 	public boolean deleteRooms(int id, String location) throws RemoteException {
-		return roomClient.deleteRooms(id, Hotel.getKey(location));
-
+		return roomClient.deleteRooms(id, location);
 	}
 
 
@@ -87,22 +88,26 @@ public class Middleware implements ResourceManager {
 
 
 	public boolean deleteCars(int id, String location) throws RemoteException {
-		return carClient.deleteCars(id, Car.getKey(location));
+		return carClient.deleteCars(id, location);
+	}
+
+	public Customer getCustomer(int id, int customerId) throws RemoteException {
+		return customerClient.getCustomer(id, customerId);
 	}
 
 
 	public int queryFlight(int id, int flightNum) throws RemoteException {
-		return flightClient.queryFlight(id, Flight.getKey(flightNum));
+		return flightClient.queryFlight(id, flightNum);
 	}
 
 
 	public int queryFlightPrice(int id, int flightNum ) throws RemoteException {
-		return flightClient.queryFlightPrice(id, Flight.getKey(flightNum));
+		return flightClient.queryFlightPrice(id, flightNum);
 	}
 
 
 	public int queryRooms(int id, String location) throws RemoteException {
-		return roomClient.queryRooms(id, Hotel.getKey(location));
+		return roomClient.queryRooms(id, location);
 	}
 
 
@@ -112,12 +117,12 @@ public class Middleware implements ResourceManager {
 
 
 	public int queryCars(int id, String location) throws RemoteException {
-		return carClient.queryCars(id, Car.getKey(location));
+		return carClient.queryCars(id, location);
 	}
 
 
 	public int queryCarsPrice(int id, String location) throws RemoteException {
-		return carClient.queryCarsPrice(id, Car.getKey(location));
+		return carClient.queryCarsPrice(id, location);
 	}
 
 

@@ -1,7 +1,8 @@
-import ResInterface.*;
+import ResImpl.*;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.RMISecurityManager;
+import java.rmi.RemoteException;
 
 import java.util.*;
 import java.io.*;
@@ -9,18 +10,18 @@ import java.io.*;
 
 public class Client implements ResourceManager{
 
-    public static final String GROUP_NAME = "Group40";
-    ResourceManager rm;
-    client obj;
+    private ResourceManager rm;
 
     public Client(int portNum, String server) {
-        obj = new client();
 
         try {
             // get a reference to the rmiregistry
-            Registry registry = LocateRegistry.getRegistry(server, port);
+            Registry registry = LocateRegistry.getRegistry(server, portNum);
             // get the proxy and the remote reference by rmiregistry lookup
-            rm = (ResourceManager) registry.lookup(GROUP_NAME);
+
+            Object o = registry.lookup("Group40");
+            System.out.println(o.getClass().getName());
+            rm = (ResourceManager) registry.lookup("Group40");
             if (rm != null) {
                 System.out.println("Successful");
                 System.out.println("Connected to RM");
@@ -40,7 +41,7 @@ public class Client implements ResourceManager{
 
     public boolean addFlight(int id, int flightNum, int flightSeats, int flightPrice) throws RemoteException {
 
-    	result = rm.addFlight(id, flightNum, flightSeats, flightPrice);
+    	boolean result = rm.addFlight(id, flightNum, flightSeats, flightPrice);
         
         if (result)
             System.out.println("Flight added");
@@ -53,7 +54,7 @@ public class Client implements ResourceManager{
 
     public boolean addCars(int id, String location, int numCars, int price) throws RemoteException {
 
-    	result = rm.addCars(id, location, numCars, price);
+    	boolean result = rm.addCars(id, location, numCars, price);
 
         if (result)
             System.out.println("Cars added");
@@ -66,7 +67,7 @@ public class Client implements ResourceManager{
 
     public boolean addRooms(int id, String location, int numRooms, int price) throws RemoteException {
 
-    	result = rm.addRooms(id, location, numRooms, price);
+    	boolean result = rm.addRooms(id, location, numRooms, price);
 
         if (result)
             System.out.println("Rooms added");
@@ -93,10 +94,22 @@ public class Client implements ResourceManager{
         return customerAdded;
     }
 
+    public Customer getCustomer(int id, int customerId) throws RemoteException {
+
+        Customer customer = rm.getCustomer(id, customerId);
+
+        if (customer != null)
+            System.out.println("Customer exists");
+        else
+            System.out.println("Customer does not exist");
+
+        return customer;
+    }
+
 
     public boolean deleteFlight(int id, int flightNumber) throws RemoteException {
 
-    	result = rm.deleteFlight(id, flightNumber)
+    	boolean result = rm.deleteFlight(id, flightNumber);
 
         if (result)
             System.out.println("Flight Deleted");
@@ -109,7 +122,7 @@ public class Client implements ResourceManager{
 
     public boolean deleteCars(int id, String location) throws RemoteException {
 
-    	result = rm.deleteCars(id, location);
+    	boolean result = rm.deleteCars(id, location);
 
         if (result)
             System.out.println("Cars Deleted");
@@ -122,7 +135,7 @@ public class Client implements ResourceManager{
 
     public boolean deleteRooms(int id, String location) throws RemoteException {
 
-    	result = rm.deleteRooms(id, location);
+    	boolean result = rm.deleteRooms(id, location);
 
         if (result)
             System.out.println("Rooms Deleted");
@@ -135,7 +148,7 @@ public class Client implements ResourceManager{
 
     public boolean deleteCustomer(int id, int customer) throws RemoteException {
 
-    	result = rm.deleteCustomer(id, customer);
+    	boolean result = rm.deleteCustomer(id, customer);
 
         if (result)
             System.out.println("Customer Deleted");
@@ -157,7 +170,7 @@ public class Client implements ResourceManager{
 
     public int queryCars(int id, String location) throws RemoteException {
 
-        numCars = rm.queryCars(id, location);
+        int numCars = rm.queryCars(id, location);
         System.out.println("number of Cars at this location:" + numCars);
 
         return numCars;
@@ -166,10 +179,10 @@ public class Client implements ResourceManager{
 
     public int queryRooms(int id, String location) throws RemoteException {
 
-        numRooms = rm.queryRooms(id, location);
+        int numRooms = rm.queryRooms(id, location);
         System.out.println("number of Rooms at this location:" + numRooms);
 
-        return numRooms
+        return numRooms;
     }
 
 
@@ -184,7 +197,7 @@ public class Client implements ResourceManager{
 
     public int queryFlightPrice(int id, int flightNumber) throws RemoteException {
 
-        price = rm.queryFlightPrice(id, flightNumber);
+        int price = rm.queryFlightPrice(id, flightNumber);
         System.out.println("Price of a seat:" + price);
 
         return price;
@@ -193,7 +206,7 @@ public class Client implements ResourceManager{
 
     public int queryCarsPrice(int id, String location) throws RemoteException {
 
-        price = rm.queryCarsPrice(id, location);
+        int price = rm.queryCarsPrice(id, location);
         System.out.println("Price of a car at this location:" + price);
 
         return price;
@@ -202,7 +215,7 @@ public class Client implements ResourceManager{
 
     public int queryRoomsPrice(int id, String location) throws RemoteException {
 
-        price = rm.queryRoomsPrice(id, location);
+        int price = rm.queryRoomsPrice(id, location);
         System.out.println("Price of Rooms at this location:" + price);
 
         return price;
@@ -211,7 +224,7 @@ public class Client implements ResourceManager{
 
     public boolean reserveFlight(int id, int customer, int flightNumber) throws RemoteException {
 
-    	result = rm.reserveFlight(id, customer, flightNumber);
+    	boolean result = rm.reserveFlight(id, customer, flightNumber);
 
         if (result)
             System.out.println("Flight Reserved");
@@ -224,7 +237,7 @@ public class Client implements ResourceManager{
 
     public boolean reserveCar(int id, int customer, String location) throws RemoteException {
 
-    	result = rm.reserveCar(id, customer, location); 
+    	boolean result = rm.reserveCar(id, customer, location); 
 
         if (result)
             System.out.println("Car Reserved");
@@ -237,7 +250,7 @@ public class Client implements ResourceManager{
 
     public boolean reserveRoom(int id, int customer, String location) throws RemoteException {
 
-    	result = rm.reserveRoom(id, customer, location);
+    	boolean result = rm.reserveRoom(id, customer, location);
 
         if (result)
             System.out.println("Room Reserved");
