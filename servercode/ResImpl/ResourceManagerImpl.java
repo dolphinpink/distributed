@@ -447,29 +447,25 @@ public class ResourceManagerImpl implements ResourceManager
 
     
     // Adds car reservation to this customer. 
-    public boolean reserveCar(int id, int customerID, String location)
-        throws RemoteException
+    public boolean reserveCar(int id, int customerID, String location) throws RemoteException
     {
         return reserveItem(id, customerID, Car.getKey(location), location);
     }
 
 
     // Adds room reservation to this customer. 
-    public boolean reserveRoom(int id, int customerID, String location)
-        throws RemoteException
+    public boolean reserveRoom(int id, int customerID, String location) throws RemoteException
     {
         return reserveItem(id, customerID, Hotel.getKey(location), location);
     }
     // Adds flight reservation to this customer.  
-    public boolean reserveFlight(int id, int customerID, int flightNum)
-        throws RemoteException
+    public boolean reserveFlight(int id, int customerID, int flightNum) throws RemoteException
     {
         return reserveItem(id, customerID, Flight.getKey(flightNum), String.valueOf(flightNum));
     }
     
     // Reserve an itinerary 
-    public boolean itinerary(int id,int customer,Vector flightNumbers,String location,boolean Car,boolean Room)
-        throws RemoteException
+    public boolean itinerary(int id,int customer,Vector flightNumbers,String location,boolean Car,boolean Room) throws RemoteException
     {
         return false;
     }
