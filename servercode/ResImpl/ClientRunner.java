@@ -1,4 +1,5 @@
-import ResInterface.*;
+package ResImpl;
+
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.RMISecurityManager;
@@ -8,12 +9,12 @@ import java.util.*;
 import java.io.*;
 
 
-public class client {
+public class ClientRunner {
     static String message = "blank";
     static ResourceManager rm = null;
 
     public static void main(String args[]) {
-        client obj = new client();
+        ClientRunner obj = new ClientRunner();
         BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
         String command = "";
         Vector arguments  = new Vector();
@@ -43,29 +44,11 @@ public class client {
             System.exit(1);
         }
 
-        try {
-            // get a reference to the rmiregistry
-            Registry registry = LocateRegistry.getRegistry(server, port);
-            // get the proxy and the remote reference by rmiregistry lookup
-            rm = (ResourceManager) registry.lookup("Group40");
-            if (rm != null) {
-                System.out.println("Successful");
-                System.out.println("Connected to RM");
-            } else {
-                System.out.println("Unsuccessful");
-            }
-            // make call on remote method
-        } catch (Exception e) {
-            System.err.println("Client exception: " + e.toString());
-            e.printStackTrace();
-        }
-
-
+        Client client = new Client(port, server);
 
         if (System.getSecurityManager() == null) {
             //System.setSecurityManager(new RMISecurityManager());
         }
-
 
         System.out.println("\n\n\tClient Interface");
         System.out.println("Type \"help\" for list of supported commands");
@@ -116,7 +99,7 @@ public class client {
                     flightNumber = obj.getInt(arguments.elementAt(2));
                     flightSeats = obj.getInt(arguments.elementAt(3));
                     flightPrice = obj.getInt(arguments.elementAt(4));
-                    addFlight(id, flightNumber, flightSeats, flightPrice);
+                    client.addFlight(id, flightNumber, flightSeats, flightPrice);
 
                 } catch (Exception e) {
 
@@ -145,7 +128,7 @@ public class client {
                     location = obj.getString(arguments.elementAt(2));
                     numCars = obj.getInt(arguments.elementAt(3));
                     price = obj.getInt(arguments.elementAt(4));
-                    addCars(id, location, numCars, price);
+                    client.addCars(id, location, numCars, price);
 
                 } catch (Exception e) {
 
@@ -175,7 +158,7 @@ public class client {
                     location = obj.getString(arguments.elementAt(2));
                     numRooms = obj.getInt(arguments.elementAt(3));
                     price = obj.getInt(arguments.elementAt(4));
-                    addRooms(id, location, numRooms, price);
+                    client.addRooms(id, location, numRooms, price);
 
                 } catch (Exception e) {
 
@@ -199,7 +182,7 @@ public class client {
                 try {
 
                     id = obj.getInt(arguments.elementAt(1));
-                    newCustomer(id);
+                    client.newCustomer(id);
 
                 } catch (Exception e) {
 
@@ -225,7 +208,7 @@ public class client {
 
                     id = obj.getInt(arguments.elementAt(1));
                     flightNumber = obj.getInt(arguments.elementAt(2));
-                    deleteFlight(id, flightNumber);
+                    client.deleteFlight(id, flightNumber);
 
                 } catch (Exception e) {
 
@@ -251,7 +234,7 @@ public class client {
 
                     id = obj.getInt(arguments.elementAt(1));
                     location = obj.getString(arguments.elementAt(2));
-                    deleteCars(id, location);
+                    client.deleteCars(id, location);
 
                 } catch (Exception e) {
 
@@ -277,7 +260,7 @@ public class client {
 
                     id = obj.getInt(arguments.elementAt(1));
                     location = obj.getString(arguments.elementAt(2));
-                    deleteRooms(id, location);
+                    client.deleteRooms(id, location);
 
                 } catch (Exception e) {
 
@@ -303,7 +286,7 @@ public class client {
 
                     id = obj.getInt(arguments.elementAt(1));
                     cid = obj.getInt(arguments.elementAt(2));
-                    deleteCustomer(id, cid);
+                    client.deleteCustomer(id, cid);
 
                 } catch (Exception e) {
 
@@ -329,7 +312,7 @@ public class client {
 
                     id = obj.getInt(arguments.elementAt(1));
                     flightNumber = obj.getInt(arguments.elementAt(2));
-                    queryFlight(id, flightNumber);
+                    client.queryFlight(id, flightNumber);
 
                 } catch (Exception e) {
 
@@ -354,7 +337,7 @@ public class client {
 
                     id = obj.getInt(arguments.elementAt(1));
                     location = obj.getString(arguments.elementAt(2));
-                    queryCars(id, location);
+                    client.queryCars(id, location);
 
                 } catch (Exception e) {
 
@@ -380,7 +363,7 @@ public class client {
 
                     id = obj.getInt(arguments.elementAt(1));
                     location = obj.getString(arguments.elementAt(2));
-                    queryRooms(id, location);
+                    client.queryRooms(id, location);
 
                 } catch (Exception e) {
 
@@ -406,7 +389,7 @@ public class client {
 
                     id = obj.getInt(arguments.elementAt(1));
                     cid = obj.getInt(arguments.elementAt(2));
-                    queryCustomerInfo(id, cid);
+                    client.queryCustomerInfo(id, cid);
 
                 } catch (Exception e) {
 
@@ -432,7 +415,7 @@ public class client {
 
                     id = obj.getInt(arguments.elementAt(1));
                     flightNumber = obj.getInt(arguments.elementAt(2));
-                    queryFlightPrice(id, flightNumber);
+                    client.queryFlightPrice(id, flightNumber);
 
                 } catch (Exception e) {
 
@@ -458,7 +441,7 @@ public class client {
 
                     id = obj.getInt(arguments.elementAt(1));
                     location = obj.getString(arguments.elementAt(2));
-                    queryCarsPrice(id, location);
+                    client.queryCarsPrice(id, location);
 
                 } catch (Exception e) {
 
@@ -484,7 +467,7 @@ public class client {
 
                     id = obj.getInt(arguments.elementAt(1));
                     location = obj.getString(arguments.elementAt(2));
-                    queryRoomsPrice(id, location);
+                    client.queryRoomsPrice(id, location);
 
                 } catch (Exception e) {
 
@@ -512,7 +495,7 @@ public class client {
                     id = obj.getInt(arguments.elementAt(1));
                     cid = obj.getInt(arguments.elementAt(2));
                     flightNumber = obj.getInt(arguments.elementAt(3));
-                    reserveFlight(id, cid, flightNumber);
+                    client.reserveFlight(id, cid, flightNumber);
 
                 } catch (Exception e) {
 
@@ -540,7 +523,7 @@ public class client {
                     id = obj.getInt(arguments.elementAt(1));
                     cid = obj.getInt(arguments.elementAt(2));
                     location = obj.getString(arguments.elementAt(3));
-                    reserveCar(id, cid, location);
+                    client.reserveCar(id, cid, location);
 
                 } catch (Exception e) {
 
@@ -567,7 +550,7 @@ public class client {
                     id = obj.getInt(arguments.elementAt(1));
                     cid = obj.getInt(arguments.elementAt(2));
                     location = obj.getString(arguments.elementAt(3));
-                    reserveRoom(id, cid, location);
+                    client.reserveRoom(id, cid, location);
 
                 } catch (Exception e) {
 
@@ -607,7 +590,7 @@ public class client {
                     car = obj.getBoolean(arguments.elementAt(arguments.size() - 2));
                     room = obj.getBoolean(arguments.elementAt(arguments.size() - 1));
 
-                    itinerary(id, cid, flightNumbers, location, car, room);
+                    client.itinerary(id, cid, flightNumbers, location, car, room);
 
                 } catch (Exception e) {
 
@@ -642,7 +625,7 @@ public class client {
 
                     id = obj.getInt(arguments.elementAt(1));
                     cid = obj.getInt(arguments.elementAt(2));
-                    newCustomer(id, cid);
+                    client.newCustomer(id, cid);
 
                 } catch (Exception e) {
 
@@ -948,152 +931,4 @@ public class client {
             throw e;
         }
     }
-
-    // METHODS
-
-    public static void addFlight(int id, int flightNumber, int flightSeats, int flightPrice) throws RemoteException {
-        if (rm.addFlight(id, flightNumber, flightSeats, flightPrice))
-            System.out.println("Flight added");
-        else
-            System.out.println("Flight could not be added");
-    }
-
-
-    public static void addCars(int id, String location, int numCars, int price) throws RemoteException {
-        if (rm.addCars(id, location, numCars, price))
-            System.out.println("Cars added");
-        else
-            System.out.println("Cars could not be added");
-    }
-
-
-    public static void addRooms(int id, String location, int numRooms, int price) throws RemoteException {
-        if (rm.addRooms(id, location, numRooms, price))
-            System.out.println("Rooms added");
-        else
-            System.out.println("Rooms could not be added");
-    }
-
-
-    public static void newCustomer(int id) throws RemoteException {
-        int cid = rm.newCustomer(id);
-        System.out.println("new customer id:" + cid);
-    }
-
-    public static void newCustomer(int id, int cid) throws RemoteException {
-        boolean customerCreated = rm.newCustomer(id, cid);
-
-        if (customerCreated)
-        	System.out.println("new customer id:" + cid);
-        else
-        	System.out.println("customer creation failed");
-    }
-
-
-    public static void deleteFlight(int id, int flightNumber) throws RemoteException {
-        if (rm.deleteFlight(id, flightNumber))
-            System.out.println("Flight Deleted");
-        else
-            System.out.println("Flight could not be deleted");
-    }
-
-
-    public static void deleteCars(int id, String location) throws RemoteException {
-        if (rm.deleteCars(id, location))
-            System.out.println("Cars Deleted");
-        else
-            System.out.println("Cars could not be deleted");
-    }
-
-
-    public static void deleteRooms(int id, String location) throws RemoteException {
-        if (rm.deleteRooms(id, location))
-            System.out.println("Rooms Deleted");
-        else
-            System.out.println("Rooms could not be deleted");
-    }
-
-
-    public static void deleteCustomer(int id, int cid) throws RemoteException {
-        if (rm.deleteCustomer(id, cid))
-            System.out.println("Customer Deleted");
-        else
-            System.out.println("Customer could not be deleted");
-    }
-
-
-    public static void queryFlight(int id, int flightNumber) throws RemoteException {
-        int seats = rm.queryFlight(id, flightNumber);
-        System.out.println("Number of seats available:" + seats);
-    }
-
-
-    public static void queryCars(int id, String location) throws RemoteException {
-        int numCars = rm.queryCars(id, location);
-        System.out.println("number of Cars at this location:" + numCars);
-    }
-
-
-    public static void queryRooms(int id, String location) throws RemoteException {
-        int numRooms = rm.queryRooms(id, location);
-        System.out.println("number of Rooms at this location:" + numRooms);
-    }
-
-
-    public static void queryCustomerInfo(int id, int cid) throws RemoteException {
-        String bill = rm.queryCustomerInfo(id, cid);
-        System.out.println("Customer info:" + bill);
-
-    }
-
-
-    public static void queryFlightPrice(int id, int flightNumber) throws RemoteException {
-        int price = rm.queryFlightPrice(id, flightNumber);
-        System.out.println("Price of a seat:" + price);
-    }
-
-
-    public static void queryCarsPrice(int id, String location) throws RemoteException {
-        int price = rm.queryCarsPrice(id, location);
-        System.out.println("Price of a car at this location:" + price);
-    }
-
-
-    public static void queryRoomsPrice(int id, String location) throws RemoteException {
-        int price = rm.queryRoomsPrice(id, location);
-        System.out.println("Price of Rooms at this location:" + price);
-    }
-
-
-    public static void reserveFlight(int id, int cid, int flightNumber) throws RemoteException {
-        if (rm.reserveFlight(id, cid, flightNumber))
-            System.out.println("Flight Reserved");
-        else
-            System.out.println("Flight could not be reserved.");
-    }
-
-
-    public static void reserveCar(int id, int cid, String location) throws RemoteException {
-        if (rm.reserveCar(id, cid, location))
-            System.out.println("Car Reserved");
-        else
-            System.out.println("Car could not be reserved.");
-    }
-
-
-    public static void reserveRoom(int id, int cid, String location) throws RemoteException {
-        if (rm.reserveRoom(id, cid, location))
-            System.out.println("Room Reserved");
-        else
-            System.out.println("Room could not be reserved.");
-    }
-
-
-    public static void itinerary(int id, int cid, Vector flightNumbers, String location, boolean car, boolean room) throws RemoteException {
-        if (rm.itinerary(id, cid, flightNumbers, location, car, room))
-            System.out.println("Itinerary Reserved");
-        else
-            System.out.println("Itinerary could not be reserved.");
-    }
-
 }

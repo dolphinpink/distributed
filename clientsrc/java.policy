@@ -1,5 +1,0 @@
-grant codeBase "file:/home/2013/yxia19/distributed/clientsrc/" {
-    permission java.security.AllPermission;
-};
-
-
