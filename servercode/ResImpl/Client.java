@@ -11,6 +11,9 @@ import java.io.*;
 
 
 public class Client implements ResourceManager{
+
+    private static final int CUSTOMER_PORT = 1043;
+
     ResourceManager rm;
     client obj;
 
@@ -92,6 +95,18 @@ public class Client implements ResourceManager{
         System.out.println("new customer id:" + cid);
 
         return customerAdded;
+    }
+
+    public boolean customerExists(int id, int customerId) throws remoteException {
+
+        boolean customerExists = rm.customerExists(id, customerId);
+
+        if (customerExists)
+            System.out.println("Customer exists");
+        else
+            System.out.println("Customer does not exist");
+
+        return customerExists;
     }
 
 

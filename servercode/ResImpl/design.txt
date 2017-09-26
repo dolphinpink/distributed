@@ -1,0 +1,5 @@
+design
+
+locks in middleware because assumed 1 middleware 4 RMs
+
+didn't implement locks for deletion or adding, because deleting and adding functions don't check for referenced customers
