@@ -1,6 +1,3 @@
-
-package ResImpl;
-
 import ResInterface.*;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -11,6 +8,8 @@ import java.io.*;
 
 
 public class Client implements ResourceManager{
+
+    public static final String GROUP_NAME = "Group40";
     ResourceManager rm;
     client obj;
 
@@ -21,7 +20,7 @@ public class Client implements ResourceManager{
             // get a reference to the rmiregistry
             Registry registry = LocateRegistry.getRegistry(server, port);
             // get the proxy and the remote reference by rmiregistry lookup
-            rm = (ResourceManager) registry.lookup("Group40");
+            rm = (ResourceManager) registry.lookup(GROUP_NAME);
             if (rm != null) {
                 System.out.println("Successful");
                 System.out.println("Connected to RM");
