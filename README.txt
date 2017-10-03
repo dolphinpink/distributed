@@ -20,10 +20,7 @@ To run the project, make sure you have the newest version of Java
 installed. 
 
 Before running the scripts, make sure you have modified the contents of
-the client's java.policy to:
-`grant codebase "file:$PATH/distrbuted/clientsrc/"`
-and the contents of the hosts running the server/middleware's java.policy
-to:
+of the hosts running the server/middleware's java.policy to:
 `grant codebase "file:$PATH/distrbuted/servercode/"`
 where $PATH is the path to your distributed folder.
 
