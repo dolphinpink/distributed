@@ -21,31 +21,31 @@ installed.
 
 Before running the scripts, make sure you have modified the contents of
 the client's java.policy to:
-```
+```bash
 grant codebase "file:$PATH/distrbuted/clientsrc/"
 ```
 and the contents of the hosts running the server/middleware's java.policy
 to:
-```
+```bash
 grant codebase "file:$PATH/distrbuted/servercode/"
 ```
 where $PATH is the path to your distributed folder.
 
 To build the project, run:
-```
+```bash
 $ ./build.sh $PATH
 ```
 where $PATH is the path to your distributed folder. 
 
 To start the middleware, run:
-```
+```bash
 $ ./midware.sh $PATH $HOSTNAME
 ```
 where $PATH is the path to your distributed folder, and $HOSTNAME is the
 hostname of the computer you're running the middleware off of.
 
 To start an RMI server, run:
-```
+```bash
 $ ./rm.sh \$NUM \$PATH \$HOSTNAME
 ```
 where $NUM is the number of the RMI server (1 through 4), $PATH is the 
@@ -53,7 +53,7 @@ path to your distributed folder, and $HOSTNAME is the hostname of the
 computer you're running the RMI server off of.
 
 To start a client, run:
-```
+```bash
 $ ./client.sh $PATH $HOSTNAME
 ```
 where $PATH is the path to your distributed folder, and $HOSTNAME is the
