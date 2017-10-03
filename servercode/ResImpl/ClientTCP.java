@@ -176,39 +176,23 @@ public class ClientTCP implements ResourceManager{
         return customerAdded;
     }
 
+    @deprecated
     public Customer getCustomer(int id, int customerId) throws RemoteException {
 
-        String result = null;
-        String json = factory.createObjectBuilder()
-                .add("method", 2)
-                .add("id", id)
-                .add("cid", cid)
-                .build()
-                .toString();
-
-        try {
-            outToServer.println(remoteString); // send the user's input via the output stream to the server
-            String resultJson = inFromServer.readLine(); // receive the server's result via the input stream from the server
-            JSONObject obj = new JSONObject(resultJson);
-            return obj.getString(RESULT);
-        } catch (Exception e) {
-            throw new Exception("Serialization went wrong, or wrong response" + resultJson);
-        }
-
-        return result;
-
-        if (customer != null)
-            System.out.println("Customer exists");
-        else
-            System.out.println("Customer does not exist");
-
-        return customer;
+        return null;
     }
 
 
     public boolean deleteFlight(int id, int flightNumber) throws RemoteException {
 
-        boolean result = rm.deleteFlight(id, flightNumber);
+        boolean result = bInvoke(
+            String value = factory.createObjectBuilder()
+                .add("method", 2)
+                .add("id", id)
+                .add("flightNumber", flightNumber)
+                .build()
+                .toString();
+        )
 
         if (result)
             System.out.println("Flight Deleted");
@@ -221,7 +205,14 @@ public class ClientTCP implements ResourceManager{
 
     public boolean deleteCars(int id, String location) throws RemoteException {
 
-        boolean result = rm.deleteCars(id, location);
+        boolean result = bInvoke(
+            String value = factory.createObjectBuilder()
+                .add("method", 2)
+                .add("id", id)
+                .add("location", location)
+                .build()
+                .toString();
+        )
 
         if (result)
             System.out.println("Cars Deleted");
@@ -234,7 +225,14 @@ public class ClientTCP implements ResourceManager{
 
     public boolean deleteRooms(int id, String location) throws RemoteException {
 
-        boolean result = rm.deleteRooms(id, location);
+        boolean result = bInvoke(
+            String value = factory.createObjectBuilder()
+                .add("method", 2)
+                .add("id", id)
+                .add("location", location)
+                .build()
+                .toString();
+        )
 
         if (result)
             System.out.println("Rooms Deleted");
@@ -247,7 +245,14 @@ public class ClientTCP implements ResourceManager{
 
     public boolean deleteCustomer(int id, int customer) throws RemoteException {
 
-        boolean result = rm.deleteCustomer(id, customer);
+        boolean result = bInvoke(
+            String value = factory.createObjectBuilder()
+                .add("method", 2)
+                .add("id", id)
+                .add("customer", customer)
+                .build()
+                .toString();
+        )
 
         if (result)
             System.out.println("Customer Deleted");
@@ -260,7 +265,15 @@ public class ClientTCP implements ResourceManager{
 
     public int queryFlight(int id, int flightNumber) throws RemoteException {
 
-        int seats = rm.queryFlight(id, flightNumber);
+        int result = iInvoke(
+            String value = factory.createObjectBuilder()
+                .add("method", 2)
+                .add("id", id)
+                .add("flightNumber", flightNumber)
+                .build()
+                .toString();
+        )
+
         System.out.println("Number of seats available:" + seats);
 
         return seats;
@@ -269,7 +282,15 @@ public class ClientTCP implements ResourceManager{
 
     public int queryCars(int id, String location) throws RemoteException {
 
-        int numCars = rm.queryCars(id, location);
+        int result = iInvoke(
+            String value = factory.createObjectBuilder()
+                .add("method", 2)
+                .add("id", id)
+                .add("location", location)
+                .build()
+                .toString();
+        )
+
         System.out.println("number of Cars at this location:" + numCars);
 
         return numCars;
@@ -278,7 +299,15 @@ public class ClientTCP implements ResourceManager{
 
     public int queryRooms(int id, String location) throws RemoteException {
 
-        int numRooms = rm.queryRooms(id, location);
+        int result = iInvoke(
+            String value = factory.createObjectBuilder()
+                .add("method", 2)
+                .add("id", id)
+                .add("location", location)
+                .build()
+                .toString();
+        )
+
         System.out.println("number of Rooms at this location:" + numRooms);
 
         return numRooms;
@@ -287,7 +316,15 @@ public class ClientTCP implements ResourceManager{
 
     public String queryCustomerInfo(int id, int customer) throws RemoteException {
 
-        String bill = rm.queryCustomerInfo(id, customer);
+        String result = sInvoke(
+            String value = factory.createObjectBuilder()
+                .add("method", 2)
+                .add("id", id)
+                .add("customer", customer)
+                .build()
+                .toString();
+        )
+
         System.out.println("Customer info:" + bill);
 
         return bill;
@@ -296,7 +333,15 @@ public class ClientTCP implements ResourceManager{
 
     public int queryFlightPrice(int id, int flightNumber) throws RemoteException {
 
-        int price = rm.queryFlightPrice(id, flightNumber);
+        int result = iInvoke(
+            String value = factory.createObjectBuilder()
+                .add("method", 2)
+                .add("id", id)
+                .add("flightNumber", flightNumber)
+                .build()
+                .toString();
+        )
+
         System.out.println("Price of a seat:" + price);
 
         return price;
@@ -305,7 +350,15 @@ public class ClientTCP implements ResourceManager{
 
     public int queryCarsPrice(int id, String location) throws RemoteException {
 
-        int price = rm.queryCarsPrice(id, location);
+        int result = iInvoke(
+            String value = factory.createObjectBuilder()
+                .add("method", 2)
+                .add("id", id)
+                .add("location", location)
+                .build()
+                .toString();
+        )
+
         System.out.println("Price of a car at this location:" + price);
 
         return price;
@@ -314,7 +367,15 @@ public class ClientTCP implements ResourceManager{
 
     public int queryRoomsPrice(int id, String location) throws RemoteException {
 
-        int price = rm.queryRoomsPrice(id, location);
+        int result = iInvoke(
+            String value = factory.createObjectBuilder()
+                .add("method", 2)
+                .add("id", id)
+                .add("location", location)
+                .build()
+                .toString();
+        )
+
         System.out.println("Price of Rooms at this location:" + price);
 
         return price;
@@ -323,7 +384,15 @@ public class ClientTCP implements ResourceManager{
 
     public boolean reserveFlight(int id, int customer, int flightNumber) throws RemoteException {
 
-        boolean result = rm.reserveFlight(id, customer, flightNumber);
+        boolean result = bInvoke(
+            String value = factory.createObjectBuilder()
+                .add("method", 2)
+                .add("id", id)
+                .add("customer", customer)
+                .add("flightNumber", flightNumber)
+                .build()
+                .toString();
+        )
 
         if (result)
             System.out.println("Flight Reserved");
@@ -336,7 +405,15 @@ public class ClientTCP implements ResourceManager{
 
     public boolean reserveCar(int id, int customer, String location) throws RemoteException {
 
-        boolean result = rm.reserveCar(id, customer, location); 
+        boolean result = bInvoke(
+            String value = factory.createObjectBuilder()
+                .add("method", 2)
+                .add("id", id)
+                .add("customer", customer)
+                .add("location", location)
+                .build()
+                .toString();
+        )
 
         if (result)
             System.out.println("Car Reserved");
@@ -349,7 +426,16 @@ public class ClientTCP implements ResourceManager{
 
     public boolean reserveRoom(int id, int customer, String location) throws RemoteException {
 
-        boolean result = rm.reserveRoom(id, customer, location);
+        boolean result = bInvoke(
+            String value = factory.createObjectBuilder()
+                .add("method", 2)
+                .add("id", id)
+                .add("customer", customer)
+                .add("location", location)
+                .build()
+                .toString();
+        )
+
 
         if (result)
             System.out.println("Room Reserved");
@@ -361,8 +447,22 @@ public class ClientTCP implements ResourceManager{
 
 
     public boolean itinerary(int id, int customer, Vector flightNumbers, String location, boolean car, boolean room) throws RemoteException {
+
+        boolean result = bInvoke(
+            String value = factory.createObjectBuilder()
+                .add("method", 2)
+                .add("id", id)
+                .add("customer", customer)
+                .add("flightNumbers", flightNumbers)
+                .add("location", location)
+                .add("car", car)
+                .add("room", room)
+                .build()
+                .toString();
+        )
+
         
-        if (rm.itinerary(id, customer, flightNumbers, location, car, room)) {
+        if (result) {
             System.out.println("Itinerary Reserved");
             return true;
         }
