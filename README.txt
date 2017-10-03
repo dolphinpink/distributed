@@ -10,7 +10,37 @@ Y88b  d88PY88b. .d88P888   "   888888          Y88b  d88P 888  888"
 ------------------------------------------------------------------------
 --------------COMP 512 Distributed System Project Phase 1:--------------
 -----------------------Yiwei Xia and Marie Payne------------------------
+------------------------------------------------------------------------
 
-The submission has two parts: the github link with all the server/client
-code hosted here: https://github.com/dolphinpink/distributed and the 
-project slides for the demo, in pdf format. 
+The submission has two parts: the folder with all the server/client
+code for both the TCP and RMI parts hosted here, and the project slides 
+for the demo, in pdf format. 
+
+To run the project, make sure you have the newest version of Java 
+installed. 
+
+Before running the scripts, make sure you have modified the contents of
+of the hosts running the server/middleware's java.policy to:
+`grant codebase "file:$PATH/distrbuted/servercode/"`
+where $PATH is the path to your distributed folder.
+
+To build the project, run:
+`$ ./build.sh $PATH`
+where $PATH is the path to your distributed folder. 
+
+To start the middleware, run:
+`$ ./midware.sh $PATH $HOSTNAME`
+where $PATH is the path to your distributed folder, and $HOSTNAME is the
+hostname of the computer you're running the middleware off of.
+
+To start an RMI server, run:
+`$ ./rm.sh \$NUM \$PATH \$HOSTNAME`
+where $NUM is the number of the RMI server (1 through 4), $PATH is the 
+path to your distributed folder, and $HOSTNAME is the hostname of the 
+computer you're running the RMI server off of.
+
+To start a client, run:
+`$ ./client.sh $PATH $HOSTNAME`
+where $PATH is the path to your distributed folder, and $HOSTNAME is the
+hostname of the computer you're running the client off of.
+
