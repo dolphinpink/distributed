@@ -14,7 +14,6 @@ import java.net.*;
 
 public class ClientTCP implements ResourceManager{
 
-    private static final int CUSTOMER_PORT = 1043;
     private static final String RESULT = "result";
     private PrintWriter outToServer;
     private BufferedReader inFromServer;
@@ -22,7 +21,6 @@ public class ClientTCP implements ResourceManager{
     public ClientTCP(int portNum, String serverName) throws Exception, IOException {
 
         Socket socket = new Socket(serverName, portNum); // establish a socket with a server using the given port#
-
         outToServer = new PrintWriter(socket.getOutputStream(),true); // open an output stream to the server...
         inFromServer = new BufferedReader(new InputStreamReader(socket.getInputStream())); // open an input stream from the server...
 
@@ -36,6 +34,7 @@ public class ClientTCP implements ResourceManager{
         try {
 
             outToServer.println(remoteString); // send the user's input via the output stream to the server
+
             resultJson = inFromServer.readLine(); // receive the server's result via the input stream from the server
             
             JsonReader jsonReader = Json.createReader(new StringReader(resultJson));
@@ -45,6 +44,7 @@ public class ClientTCP implements ResourceManager{
             return obj.getBoolean(RESULT);
 
         } catch (Exception e) {
+            e.printStackTrace(System.out);
             throw new RemoteException("Serialization went wrong, or wrong response: " + resultJson);
         }
 
@@ -197,14 +197,16 @@ public class ClientTCP implements ResourceManager{
 
     public boolean deleteFlight(int id, int number) throws RemoteException {
 
-        boolean result = bInvoke(
-            Json.createObjectBuilder()
+        String request = Json.createObjectBuilder()
                 .add(METHOD, 6)
                 .add(ID, id)
                 .add(NUMBER, number)
                 .build()
-                .toString()
-        );
+                .toString();
+
+        System.out.println(request);
+
+        boolean result = bInvoke(request);
 
         if (result)
             System.out.println("Flight Deleted");

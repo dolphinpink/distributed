@@ -15,7 +15,6 @@ import java.io.*;
 
 public class ServerTCP {
 
-    private static final int CUSTOMER_PORT = 1043;
     private static final String RESULT = "result";
 
     ResourceManager rm;
@@ -26,7 +25,7 @@ public class ServerTCP {
         this.socket = socket;
     }
 
-    public void runServer(int socket) throws IOException {
+    public void runServer() throws IOException {
 
         try (
                 ServerSocket serverSocket = new ServerSocket(socket);
@@ -73,14 +72,14 @@ public class ServerTCP {
 
         case 2: jsonBuilder.add(RESULT, rm.addCars(
                     json.getInt(ID),
-                    json.getString(NUMBER),
+                    json.getString(LOCATION),
                     json.getInt(QUANTITY),
                     json.getInt(PRICE)));
             break;
 
         case 3: jsonBuilder.add(RESULT, rm.addRooms(
                     json.getInt(ID),
-                    json.getString(NUMBER),
+                    json.getString(LOCATION),
                     json.getInt(QUANTITY),
                     json.getInt(PRICE)));
             break;

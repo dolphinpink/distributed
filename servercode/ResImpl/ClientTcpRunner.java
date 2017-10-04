@@ -10,12 +10,15 @@ import java.io.*;
 import java.net.UnknownHostException;
 
 
-public class ClientRunnerTCP {
+public class ClientTcpRunner {
     static String message = "blank";
     static ResourceManager rm = null;
 
+    public static final int MIDDLEWARE_PORT = 9060;
+    public static final String MIDDLEWARE_SERVER = "127.0.0.1";
+
     public static void main(String args[]) {
-        ClientRunnerTCP obj = new ClientRunnerTCP();
+        ClientTcpRunner obj = new ClientTcpRunner();
         BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
         String command = "";
         Vector arguments  = new Vector();
@@ -31,24 +34,10 @@ public class ClientRunnerTCP {
         int numCars;
         String location;
 
-
-        String server = "localhost";
-        int port = 1099;
-        if (args.length > 0) {
-            server = args[0];
-        }
-        if (args.length > 1) {
-            port = Integer.parseInt(args[1]);
-        }
-        if (args.length > 2) {
-            System.out.println ("Usage: java client [rmihost [rmiport]]");
-            System.exit(1);
-        }
-
         ClientTCP client;
 
         try {
-            client = new ClientTCP(port, server);
+            client = new ClientTCP(MIDDLEWARE_PORT, MIDDLEWARE_SERVER);
         } catch (Exception e) {
             System.out.println("problem starting up tcp client");
             return;

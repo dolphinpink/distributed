@@ -4,17 +4,17 @@ class ResourceManagerTcpRunner {
 
 	public static void main(String[] args) {
 
-		ResourceManagerImpl rm = new ResourceManagerImpl();
-		ServerTCP server = new ServerTCP(rm, Integer.parseInt(args[0]));
-
+		ResourceManager rm;
 		try {
+			rm = new ResourceManagerTCP();
 
-			while(true) {
-				server.runServer(Integer.parseInt(args[1]));
-			}
+			ServerTCP server = new ServerTCP(rm, Integer.parseInt(args[0]));
+
+			System.out.println("Server ready.");
+			server.runServer();
 
 		} catch (Exception e) {
-			System.err.println("Server exception: " + e.toString());
+			System.err.println("ResourceManager exception: " + e.toString());
 			e.printStackTrace();
 		}
 	}

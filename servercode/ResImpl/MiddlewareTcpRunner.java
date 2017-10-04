@@ -2,18 +2,16 @@ package ResImpl;
 
 class MiddlewareTcpRunner {
 
-	private static final int MIDDLEWARE_PORT = 1099;
+	private static final int MIDDLEWARE_SOCKET = 9060;
 
 	public static void main(String[] args) {
 
-		MiddlewareTCP middleware = new MiddlewareTCP();
-		ServerTCP server = new ServerTCP(middleware, MIDDLEWARE_PORT);
-
 		try {
 
-			while(true) {
-				server.runServer(Integer.parseInt(args[1]));
-			}
+			MiddlewareTCP middleware = new MiddlewareTCP();
+			ServerTCP server = new ServerTCP(middleware, MIDDLEWARE_SOCKET);
+
+				server.runServer();
 
 		} catch (Exception e) {
 			System.err.println("Server exception: " + e.toString());

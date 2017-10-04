@@ -13,11 +13,11 @@ import javax.json.*;
 
 public class MiddlewareTCP implements ResourceManager {
 
-	private static final int FLIGHT_PORT = 1040;
-	private static final int ROOM_PORT = 1041;
-	private static final int CAR_PORT = 1042;
-	private static final int CUSTOMER_PORT = 1043;
-	private static final int MIDDLEWARE_PORT = 1099;
+	private static final int FLIGHT_PORT = 9070;
+	private static final int ROOM_PORT = 9071;
+	private static final int CAR_PORT = 9072;
+	private static final int CUSTOMER_PORT = 9073;
+	private static final int MIDDLEWARE_PORT = 9060;
 
 	private Object reservationLock = new Object();
 
@@ -26,9 +26,9 @@ public class MiddlewareTCP implements ResourceManager {
 	private static ClientTCP carClient;
 	private static ClientTCP customerClient;
 
-	public MiddlewareTCP() {
+	public MiddlewareTCP() throws Exception{
 		// Figure out where server is running
-		String server = "localhost";
+		String server = "127.0.0.1";
 
 		flightClient = new ClientTCP(FLIGHT_PORT, server);
 		roomClient = new ClientTCP(ROOM_PORT, server);
@@ -124,15 +124,44 @@ public class MiddlewareTCP implements ResourceManager {
 	public boolean reserveCar(int id, int customerID, String location) throws RemoteException {
 
 		synchronized (reservationLock) {
-			return carClient.reserveCar(id, customerID, location);
+			if (queryCars(id, location) > 0) {
+
+				System.out.println("cars available, attempting to reserve");
+
+				if (customerClient.reserveCar(id, customerID, location)) {
+					System.out.println("successfully reserved");
+					addCars(id, location, -1, queryCarsPrice(id, location));
+					return true;
+				}
+
+			} else {
+				System.out.println("No cars left.");
+			}
+
+			return false;
 		}
+
 	}
 
 
 	public boolean reserveRoom(int id, int customerID, String location) throws RemoteException {
 
 		synchronized (reservationLock) {
-			return roomClient.reserveRoom(id, customerID, location);
+			if (queryRooms(id, location) > 0) {
+
+				System.out.println("roomm available, attempting to reserve");
+
+				if (customerClient.reserveRoom(id, customerID, location)) {
+					System.out.println("successfully reserved");
+					addRooms(id, location, -1, queryRoomsPrice(id, location));
+					return true;
+				}
+
+			} else {
+				System.out.println("No rooms left.");
+			}
+
+			return false;
 		}
 
 	}
@@ -141,7 +170,21 @@ public class MiddlewareTCP implements ResourceManager {
 	public boolean reserveFlight(int id, int customerID, int flightNum) throws RemoteException {
 
 		synchronized (reservationLock) {
-			return flightClient.reserveFlight(id, customerID, flightNum);
+			if (queryFlight(id, flightNum) > 0) {
+
+				System.out.println("seats available, attempting to reserve");
+
+				if (customerClient.reserveFlight(id, customerID, flightNum)) {
+					System.out.println("successfully reserved");
+					addFlight(id, flightNum, -1, queryFlightPrice(id, flightNum));
+					return true;
+				}
+
+			} else {
+				System.out.println("No seats left.");
+			}
+
+			return false;
 		}
 
 	}
