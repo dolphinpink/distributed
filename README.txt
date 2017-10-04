@@ -34,7 +34,7 @@ where $PATH is the path to your distributed folder, and $HOSTNAME is the
 hostname of the computer you're running the middleware off of.
 
 To start an RMI server, run:
-`$ ./rm.sh \$NUM \$PATH \$HOSTNAME`
+`$ ./rm.sh $NUM $PATH $HOSTNAME`
 where $NUM is the number of the RMI server (1 through 4), $PATH is the 
 path to your distributed folder, and $HOSTNAME is the hostname of the 
 computer you're running the RMI server off of.
