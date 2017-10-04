@@ -1,4 +1,3 @@
-z
 package ResImpl;
 
 import ResInterface.*;
@@ -10,6 +9,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.rmi.RMISecurityManager;
+import javax.json.*;
 
 public class MiddlewareTCP implements ResourceManager {
 
@@ -25,9 +25,8 @@ public class MiddlewareTCP implements ResourceManager {
 	private static ClientTCP flightClient;
 	private static ClientTCP carClient;
 	private static ClientTCP customerClient;
-	private static ServerTCP server;
 
-	public static void main(String args[]) {
+	public MiddlewareTCP() {
 		// Figure out where server is running
 		String server = "localhost";
 
@@ -35,32 +34,8 @@ public class MiddlewareTCP implements ResourceManager {
 		roomClient = new ClientTCP(ROOM_PORT, server);
 		carClient = new ClientTCP(CAR_PORT, server);
 		customerClient = new ClientTCP(CUSTOMER_PORT, server);
-		server = new ServerTCP(this, MIDDLEWARE_PORT)
 
-		try {
-			// create a new Server object
-			Middleware obj = new Middleware();
-			// dynamically generate the stub (client proxy)
-			ResourceManager rm = (ResourceManager) UnicastRemoteObject.exportObject(obj, 0);
-
-			// Bind the remote object's stub in the registry
-			Registry registry = LocateRegistry.getRegistry(MIDDLEWARE_PORT);
-			registry.rebind("Group40", rm);
-
-			System.err.println("Server ready");
-		} catch (Exception e) {
-			System.err.println("Server exception: " + e.toString());
-			e.printStackTrace();
-		}
-
-		// Create and install a security manager
-		if (System.getSecurityManager() == null) {
-			System.setSecurityManager(new RMISecurityManager());
-		}
 	}
-
-	public Middleware() throws RemoteException {}
-
 
 	public boolean addFlight(int id, int flightNum, int flightSeats, int flightPrice) throws RemoteException {
 		return flightClient.addFlight(id, flightNum, flightSeats, flightPrice);

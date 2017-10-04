@@ -1,99 +1,111 @@
 package ResImpl;
 
-static import Names;
+import static ResImpl.Names.*;
 import ResInterface.*;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.RMISecurityManager;
 import java.rmi.RemoteException;
-
+import javax.json.*;
 import java.util.*;
 import java.io.*;
+import java.net.*;
 
 
 public class ClientTCP implements ResourceManager{
 
     private static final int CUSTOMER_PORT = 1043;
     private static final String RESULT = "result";
+    private PrintWriter outToServer;
+    private BufferedReader inFromServer;
 
+    public ClientTCP(int portNum, String serverName) throws Exception, IOException {
 
-    public Client(int portNum, String server) {
+        Socket socket = new Socket(serverName, portNum); // establish a socket with a server using the given port#
 
-        String serverName=args[0];
-
-        Socket socket= new Socket(serverName, portNum); // establish a socket with a server using the given port#
-
-        PrintWriter outToServer= new PrintWriter(socket.getOutputStream(),true); // open an output stream to the server...
-        BufferedReader inFromServer = new BufferedReader(new InputStreamReader(socket.getInputStream())); // open an input stream from the server...
-
-        BufferedReader bufferedReader =new java.io.BufferedReader(new InputStreamReader(System.in)); //to read user's input
-
-    
-        outToServer.println(readerInput); // send the user's input via the output stream to the server
-        String res=inFromServer.readLine(); // receive the server's result via the input stream from the server
-        System.out.println("result: "+res); // print the server result to the user
+        outToServer = new PrintWriter(socket.getOutputStream(),true); // open an output stream to the server...
+        inFromServer = new BufferedReader(new InputStreamReader(socket.getInputStream())); // open an input stream from the server...
 
     }
 
-    private boolean bInvoke(String remoteString) throws RemoteException{
+    private boolean bInvoke(String remoteString) throws RemoteException {
 
         String result = null;
+        String resultJson = "";
 
         try {
+
             outToServer.println(remoteString); // send the user's input via the output stream to the server
-            String resultJson = inFromServer.readLine(); // receive the server's result via the input stream from the server
-            JSONObject obj = new JSONObject(resultJson);
+            resultJson = inFromServer.readLine(); // receive the server's result via the input stream from the server
+            
+            JsonReader jsonReader = Json.createReader(new StringReader(resultJson));
+            JsonObject obj = jsonReader.readObject();
+            jsonReader.close();
+
             return obj.getBoolean(RESULT);
-        } catch (Exception e) {
-            throw new Exception("Serialization went wrong, or wrong response" + resultJson);
-        }
 
+        } catch (Exception e) {
+            throw new RemoteException("Serialization went wrong, or wrong response: " + resultJson);
+        }
 
     }
 
-    private String sInvoke(remoteString) {
+    private String sInvoke(String remoteString) throws RemoteException {
 
         String result = null;
+        String resultJson = "";
 
         try {
+
+
             outToServer.println(remoteString); // send the user's input via the output stream to the server
-            String resultJson = inFromServer.readLine(); // receive the server's result via the input stream from the server
-            JSONObject obj = new JSONObject(resultJson);
+            resultJson = inFromServer.readLine(); // receive the server's result via the input stream from the server
+            
+            JsonReader jsonReader = Json.createReader(new StringReader(resultJson));
+            JsonObject obj = jsonReader.readObject();
+            jsonReader.close();
+
             return obj.getString(RESULT);
-        } catch (Exception e) {
-            throw new Exception("Serialization went wrong, or wrong response" + resultJson);
-        }
 
-        return result;
+        } catch (Exception e) {
+            throw new RemoteException("Serialization went wrong, or wrong response" + resultJson);
+        }
 
     }
 
-    private int iInvoke() {
+    private int iInvoke(String remoteString) throws RemoteException {
 
         String result = null;
+        String resultJson = "";
 
         try {
+
             outToServer.println(remoteString); // send the user's input via the output stream to the server
-            String resultJson = inFromServer.readLine(); // receive the server's result via the input stream from the server
-            JSONObject obj = new JSONObject(resultJson);
+            resultJson = inFromServer.readLine(); // receive the server's result via the input stream from the server
+            
+            JsonReader jsonReader = Json.createReader(new StringReader(resultJson));
+            JsonObject obj = jsonReader.readObject();
+            jsonReader.close();
+
             return obj.getInt(RESULT);
+
         } catch (Exception e) {
-            throw new Exception("Serialization went wrong, or wrong response" + resultJson);
+            throw new RemoteException("Serialization went wrong, or wrong response" + resultJson);
         }
     }
 
     public boolean addFlight(int id, int number, int quantity, int price) throws RemoteException {
 
         boolean result = bInvoke(
-            String value = factory.createObjectBuilder()
+            Json.createObjectBuilder()
                 .add(METHOD, 1)
                 .add(ID, id)
                 .add(NUMBER, number)
                 .add(QUANTITY, quantity)
                 .add(PRICE, price)
                 .build()
-                .toString();
-            )
+                .toString()
+            );
         
         if (result)
             System.out.println("Flight added");
@@ -107,15 +119,15 @@ public class ClientTCP implements ResourceManager{
     public boolean addCars(int id, String location, int quantity, int price) throws RemoteException {
 
         boolean result = bInvoke(
-            String value = factory.createObjectBuilder()
+            Json.createObjectBuilder()
                 .add(METHOD, 2)
                 .add(ID, id)
                 .add(LOCATION, location)
                 .add(QUANTITY, quantity)
                 .add(PRICE, price)
                 .build()
-                .toString();
-        )
+                .toString()
+        );
 
         if (result)
             System.out.println("Cars added");
@@ -129,15 +141,15 @@ public class ClientTCP implements ResourceManager{
     public boolean addRooms(int id, String location, int quantity, int price) throws RemoteException {
 
         boolean result = bInvoke(
-            String value = factory.createObjectBuilder()
+            Json.createObjectBuilder()
                 .add(METHOD, 3)
                 .add(ID, id)
                 .add(LOCATION, location)
-                .add(NUM_ROOMS, quantity)
+                .add(QUANTITY, quantity)
                 .add(PRICE, price)
                 .build()
-                .toString();
-        )
+                .toString()
+        );
 
         if (result)
             System.out.println("Rooms added");
@@ -150,36 +162,35 @@ public class ClientTCP implements ResourceManager{
 
     public int newCustomer(int id) throws RemoteException {
 
-        boolean result = Invoke(
-            String value = factory.createObjectBuilder()
+        int result = iInvoke(
+            Json.createObjectBuilder()
                 .add(METHOD, 4)
                 .add(ID, id)
                 .build()
-                .toString();
-        )
+                .toString()
+        );
 
-        return customerId;
+        return result;
     }
 
     public boolean newCustomer(int id, int customerId) throws RemoteException {
 
         boolean result = bInvoke(
-            String value = factory.createObjectBuilder()
+            Json.createObjectBuilder()
                 .add(METHOD, 5)
                 .add(ID, id)
                 .add(CUSTOMER_ID, customerId)
                 .build()
-                .toString();
-        )
+                .toString()
+        );
 
-        System.out.println("new customer id:" + customerId);
+        System.out.println("new customer id: " + result);
 
-        return customerAdded;
+        return result;
     }
 
-    @deprecated
     public Customer getCustomer(int id, int customerId) throws RemoteException {
-
+        System.out.println("This is deprecated");
         return null;
     }
 
@@ -187,13 +198,13 @@ public class ClientTCP implements ResourceManager{
     public boolean deleteFlight(int id, int number) throws RemoteException {
 
         boolean result = bInvoke(
-            String value = factory.createObjectBuilder()
+            Json.createObjectBuilder()
                 .add(METHOD, 6)
                 .add(ID, id)
                 .add(NUMBER, number)
                 .build()
-                .toString();
-        )
+                .toString()
+        );
 
         if (result)
             System.out.println("Flight Deleted");
@@ -207,13 +218,13 @@ public class ClientTCP implements ResourceManager{
     public boolean deleteCars(int id, String location) throws RemoteException {
 
         boolean result = bInvoke(
-            String value = factory.createObjectBuilder()
+            Json.createObjectBuilder()
                 .add(METHOD, 7)
                 .add(ID, id)
                 .add(LOCATION, location)
                 .build()
-                .toString();
-        )
+                .toString()
+        );
 
         if (result)
             System.out.println("Cars Deleted");
@@ -227,13 +238,13 @@ public class ClientTCP implements ResourceManager{
     public boolean deleteRooms(int id, String location) throws RemoteException {
 
         boolean result = bInvoke(
-            String value = factory.createObjectBuilder()
+            Json.createObjectBuilder()
                 .add(METHOD, 8)
                 .add(ID, id)
                 .add(LOCATION, location)
                 .build()
-                .toString();
-        )
+                .toString()
+        );
 
         if (result)
             System.out.println("Rooms Deleted");
@@ -247,13 +258,13 @@ public class ClientTCP implements ResourceManager{
     public boolean deleteCustomer(int id, int customerId) throws RemoteException {
 
         boolean result = bInvoke(
-            String value = factory.createObjectBuilder()
+            Json.createObjectBuilder()
                 .add(METHOD, 9)
                 .add(ID, id)
                 .add(CUSTOMER_ID, customerId)
                 .build()
-                .toString();
-        )
+                .toString()
+        );
 
         if (result)
             System.out.println("Customer Deleted");
@@ -267,133 +278,133 @@ public class ClientTCP implements ResourceManager{
     public int queryFlight(int id, int number) throws RemoteException {
 
         int result = iInvoke(
-            String value = factory.createObjectBuilder()
+            Json.createObjectBuilder()
                 .add(METHOD, 10)
                 .add(ID, id)
                 .add(NUMBER, number)
                 .build()
-                .toString();
-        )
+                .toString()
+        );
 
-        System.out.println("Number of seats available:" + seats);
+        System.out.println("Number of seats available:" + result);
 
-        return seats;
+        return result;
     }
 
 
     public int queryCars(int id, String location) throws RemoteException {
 
         int result = iInvoke(
-            String value = factory.createObjectBuilder()
+            Json.createObjectBuilder()
                 .add(METHOD, 11)
                 .add(ID, id)
                 .add(LOCATION, location)
                 .build()
-                .toString();
-        )
+                .toString()
+        );
 
-        System.out.println("number of Cars at this location:" + quantity);
+        System.out.println("number of Cars at this location:" + result);
 
-        return quantity;
+        return result;
     }
 
 
     public int queryRooms(int id, String location) throws RemoteException {
 
         int result = iInvoke(
-            String value = factory.createObjectBuilder()
+            Json.createObjectBuilder()
                 .add(METHOD, 12)
                 .add(ID, id)
                 .add(LOCATION, location)
                 .build()
-                .toString();
-        )
+                .toString()
+        );
 
-        System.out.println("number of Rooms at this location:" + quantity);
+        System.out.println("number of Rooms at this location:" + result);
 
-        return quantity;
+        return result;
     }
 
 
     public String queryCustomerInfo(int id, int customerId) throws RemoteException {
 
         String result = sInvoke(
-            String value = factory.createObjectBuilder()
+            Json.createObjectBuilder()
                 .add(METHOD, 13)
                 .add(ID, id)
                 .add(CUSTOMER_ID, customerId)
                 .build()
-                .toString();
-        )
+                .toString()
+        );
 
-        System.out.println("Customer info:" + bill);
+        System.out.println("Customer info:" + result);
 
-        return bill;
+        return result;
     }
 
 
     public int queryFlightPrice(int id, int number) throws RemoteException {
 
         int result = iInvoke(
-            String value = factory.createObjectBuilder()
+            Json.createObjectBuilder()
                 .add(METHOD, 14)
                 .add(ID, id)
                 .add(NUMBER, number)
                 .build()
-                .toString();
-        )
+                .toString()
+        );
 
-        System.out.println("Price of a seat:" + price);
+        System.out.println("Price of a seat:" + result);
 
-        return price;
+        return result;
     }
 
 
     public int queryCarsPrice(int id, String location) throws RemoteException {
 
         int result = iInvoke(
-            String value = factory.createObjectBuilder()
+            Json.createObjectBuilder()
                 .add(METHOD, 15)
                 .add(ID, id)
                 .add(LOCATION, location)
                 .build()
-                .toString();
-        )
+                .toString()
+        );
 
-        System.out.println("Price of a car at this location:" + price);
+        System.out.println("Price of a car at this location:" + result);
 
-        return price;
+        return result;
     }
 
 
     public int queryRoomsPrice(int id, String location) throws RemoteException {
 
         int result = iInvoke(
-            String value = factory.createObjectBuilder()
+            Json.createObjectBuilder()
                 .add(METHOD, 16)
                 .add(ID, id)
                 .add(LOCATION, location)
                 .build()
-                .toString();
-        )
+                .toString()
+        );
 
-        System.out.println("Price of Rooms at this location:" + price);
+        System.out.println("Price of Rooms at this location:" + result);
 
-        return price;
+        return result;
     }
 
 
     public boolean reserveFlight(int id, int customerId, int number) throws RemoteException {
 
         boolean result = bInvoke(
-            String value = factory.createObjectBuilder()
+            Json.createObjectBuilder()
                 .add(METHOD, 17)
                 .add(ID, id)
                 .add(CUSTOMER_ID, customerId)
                 .add(NUMBER, number)
                 .build()
-                .toString();
-        )
+                .toString()
+        );
 
         if (result)
             System.out.println("Flight Reserved");
@@ -407,14 +418,14 @@ public class ClientTCP implements ResourceManager{
     public boolean reserveCar(int id, int customerId, String location) throws RemoteException {
 
         boolean result = bInvoke(
-            String value = factory.createObjectBuilder()
+            Json.createObjectBuilder()
                 .add(METHOD, 18)
                 .add(ID, id)
                 .add(CUSTOMER_ID, customerId)
                 .add(LOCATION, location)
                 .build()
-                .toString();
-        )
+                .toString()
+        );
 
         if (result)
             System.out.println("Car Reserved");
@@ -428,14 +439,14 @@ public class ClientTCP implements ResourceManager{
     public boolean reserveRoom(int id, int customerId, String location) throws RemoteException {
 
         boolean result = bInvoke(
-            String value = factory.createObjectBuilder()
+            Json.createObjectBuilder()
                 .add(METHOD, 19)
                 .add(ID, id)
                 .add(CUSTOMER_ID, customerId)
                 .add(LOCATION, location)
                 .build()
-                .toString();
-        )
+                .toString()
+        );
 
 
         if (result)
@@ -450,17 +461,17 @@ public class ClientTCP implements ResourceManager{
     public boolean itinerary(int id, int customerId, Vector numbers, String location, boolean car, boolean room) throws RemoteException {
 
         boolean result = bInvoke(
-            String value = factory.createObjectBuilder()
+            Json.createObjectBuilder()
                 .add(METHOD, 20)
                 .add(ID, id)
                 .add(CUSTOMER_ID, customerId)
-                .add(QUANTITY, quantity)
+                .add(QUANTITY, "vector can't be json serialized")
                 .add(LOCATION, location)
                 .add(CAR, car)
                 .add(ROOM, room)
                 .build()
-                .toString();
-        )
+                .toString()
+        );
 
         
         if (result) {
